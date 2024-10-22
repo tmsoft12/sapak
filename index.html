@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle Butonları</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>LED Kontrol</h1>
+    <div class="button-container">
+        <button id="button1" onclick="toggleLED('1')">Düğme 1</button>
+        <button id="button2" onclick="toggleLED('2')">Düğme 2</button>
+        <button id="button3" onclick="toggleLED('3')">Düğme 3</button>
+    </div>
+
+    <script>
+        function toggleLED(led) {
+            const button = document.getElementById(`button${led}`);
+            const isOn = button.classList.toggle('on');
+
+            const url = `http://localhost:8080/${isOn ? 'on' : 'off'}?led=${led}`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log(data);
+                    button.innerText = isOn ? `Düğme ${led} Kapat` : `Düğme ${led} Aç`;
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>
